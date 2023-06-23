@@ -135,7 +135,7 @@ def copyArtifacts(jobName, projectNames, artifactNames) {
                         for (int i = 0; i < projectNames.size(); i++) {
                             def projectName = projectNames[i]
                             def artifactName = artifactNames[i]
-                            copyArtifacts(projectName: projectName, target: "release/${artifactName}", fingerprintArtifacts: true)
+                            copyArtifacts(projectName: projectName, target: "release/${jobName}${artifactName}", fingerprintArtifacts: true)
                         }
                     }
                 }
