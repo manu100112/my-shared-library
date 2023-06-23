@@ -48,12 +48,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        copyArtifacts('scan-demo', ['packageJT', 'commit'], ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
+                        copyArtifacts(jobName: 'scan-demo', projectNames: ['packageJT', 'commit'], artifactNames: ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        copyArtifacts('scan-ieu', ['LegacyBuildV2', 'commit'], ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
+                        copyArtifacts(jobName: 'scan-ieu', projectNames: ['LegacyBuildV2', 'commit'], artifactNames: ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
                     }
                 }
             }
@@ -63,12 +63,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        executeShell('scan-demo', 'scan-demo.sh')
+                        executeShell(jobName: 'scan-demo', scriptName: 'scan-demo.sh')
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        executeShell('scan-ieu', 'scan-ieu.sh')
+                        executeShell(jobName: 'scan-ieu', scriptName: 'scan-ieu.sh')
                     }
                 }
             }
