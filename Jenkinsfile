@@ -13,12 +13,13 @@ pipeline {
         _JAVA_OPTIONS = '-Djava.io.tmpdir="${WORKSPACE}/tmp"'
     }
 
-     stages {
+    stages {
         stage('Build Triggers') {
             steps {
-                upstream 'build'
+                build(job: 'build', propagate: true, wait: true)
             }
         }
+         
 
         stage('Build Environment') {
             steps {
