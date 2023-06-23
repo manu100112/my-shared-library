@@ -38,29 +38,46 @@ pipeline {
 
         stage('Shell Execution') {
             steps {
-                catchError(buildResult: 'UNSTABLE') {
-                    script {
-                        def shellScripts = [
-                            "scan-demo.sh",
-                            "scan-accessair.sh",
-                            "scan-dns.sh",
-                            "scan-sie.sh",
-                            "scan-smeg.sh",
-                            "scan-tangibility.sh",
-                            "scan-toast.sh",
-                            "scan-ieu.sh"
-                        ]
+                script {
+                    def shellScripts = [
+                        "scan-demo": "scan-demo.sh",
+                        "scan-airaccess": "scan-accessair.sh",
+                        "scan-dns": "scan-dns.sh",
+                        "scan-sie": "scan-sie.sh",
+                        "scan-smeg": "scan-smeg.sh",
+                        "scan-tangibility": "scan-tangibility.sh",
+                        "scan-toast": "scan-toast.sh",
+                        "scan-ieu": "scan-ieu.sh"
+                    ]
+                    
+                    def failures = [:]
+                    
+                    shellScripts.each { scriptName, scriptFile ->
+                        failures[scriptName] = {
+                            stage(scriptName) {
+                                steps {
+                                    script {
+                                        sh "chmod a+x ${scriptFile}"
+                                        def scriptOutput = sh(
+                                            returnStdout: true,
+                                            returnStatus: true,
+                                            script: "./${scriptFile}"
+                                        )
 
-                        for (def scriptFile : shellScripts) {
-                            def scriptOutput = sh(
-                                returnStdout: true,
-                                script: "chmod a+x ${scriptFile} && ./${scriptFile}"
-                            )
+                                        // Print the script output
+                                        println(scriptOutput.out)
 
-                            // Print the script output
-                            println(scriptOutput)
+                                        // Check the script exit status
+                                        if (scriptOutput.returnStatus != 0) {
+                                            error("Shell script execution failed: ${scriptFile}")
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
+                    
+                    parallel(failures)
                 }
             }
         }
