@@ -41,9 +41,12 @@ pipeline {
                 parallel(
                     "scan-demo": {
                         script {
+                            sh 'ls'
+                            sh 'pwd'
                             sh 'chmod a+x scan-demo.sh'
                             sh './scan-demo.sh > scan-demo.log'
-                            sh 'echo scan-demo.log'
+                            sh 'ls'
+                            sh 'cat scan-demo.log'
                         }
                     },
                     "scan-airaccess": {
