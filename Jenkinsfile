@@ -39,26 +39,28 @@ pipeline {
         stage('Shell Execution') {
             steps {
                 catchError(buildResult: 'UNSTABLE') {
-                script {
-                    def shellScripts = [
-                    "scan-demo.sh",
-                    "scan-accessair.sh",
-                    "scan-dns.sh",
-                    "scan-sie.sh",
-                    "scan-smeg.sh",
-                    "scan-tangibility.sh",
-                    "scan-toast.sh",
-                    "scan-ieu.sh"
-                ]
+                    script {
+                        def shellScripts = [
+                            "scan-demo.sh",
+                            "scan-accessair.sh",
+                            "scan-dns.sh",
+                            "scan-sie.sh",
+                            "scan-smeg.sh",
+                            "scan-tangibility.sh",
+                            "scan-toast.sh",
+                            "scan-ieu.sh"
+                        ]
 
-                for (def scriptFile : shellScripts) {
-                    def scriptOutput = sh(
-                        returnStdout: true,
-                        script: "chmod a+x ${scriptFile} && ./${scriptFile}"
-                    )
+                        for (def scriptFile : shellScripts) {
+                            def scriptOutput = sh(
+                                returnStdout: true,
+                                script: "chmod a+x ${scriptFile} && ./${scriptFile}"
+                            )
 
-                    // Print the script output
-                    println(scriptOutput)
+                            // Print the script output
+                            println(scriptOutput)
+                        }
+                    }
                 }
             }
         }
