@@ -62,6 +62,8 @@ def runScanJob(String prefix) {
     return {
         // Steps for Scan Job
         sh "chmod +x ${prefix}.sh" // Ensure the shell script is executable
-        sh "./${prefix}.sh" // Execute the shell script
+        //sh "./${prefix}.sh" // Execute the shell script
+        def scriptOutput = sh(returnStdout: true, script: "./${prefix}.sh") // Execute the shell script and capture the output
+        echo "Shell Script Output for ${prefix}: ${scriptOutput}" // Echo the output in the Jenkins console
     }
 }
