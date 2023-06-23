@@ -44,9 +44,9 @@ pipeline {
                             sh 'ls'
                             sh 'pwd'
                             sh 'chmod a+x scan-demo.sh'
-                            sh 'scan-demo.sh > scan-demo.log'
+                            sh '/var/lib/jenkins/workspace/Single-JenkinsFile_main/scan-demo.sh > scan-demo.log'
                             sh 'ls'
-                            sh 'cat scan-demo.log'
+                            sh 'cat /var/lib/jenkins/workspace/Single-JenkinsFile_main/scan-demo.log'
                         }
                     },
                     "scan-airaccess": {
