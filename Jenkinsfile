@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'my-agent'
+        label ''
     }
 
     options {
