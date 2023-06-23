@@ -13,10 +13,10 @@ pipeline {
         _JAVA_OPTIONS = '-Djava.io.tmpdir="${WORKSPACE}/tmp"'
     }
 
-    stages {
+       stages {
         stage('Build Triggers') {
             steps {
-                upstream(upstreamTrigger: upstream('build'))
+                upstream(upstreamProjects: 'build', threshold: hudson.model.Result.SUCCESS)
             }
         }
 
