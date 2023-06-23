@@ -48,12 +48,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        copyArtifacts('scan-demo', ['packageJT', 'commit'], ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
+                        copyArtifacts(jobName: 'scan-demo', projectNames: ['packageJT', 'commit'], artifactNames: ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        copyArtifacts('scan-ieu', ['LegacyBuildV2', 'commit'], ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
+                        copyArtifacts(jobName: 'scan-ieu', projectNames: ['LegacyBuildV2', 'commit'], artifactNames: ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
                     }
                 }
             }
@@ -98,7 +98,7 @@ def copyArtifacts(jobName, projectNames, artifactNames) {
             for (int i = 0; i < projectNames.size(); i++) {
                 def projectName = projectNames[i]
                 def artifactName = artifactNames[i]
-                copyArtifacts(projectName: projectName, target: "release/${jobName}${artifactName}", fingerprintArtifacts: true)
+                copyArtifacts(projectName: projectName, target: "release/${artifactName}", fingerprintArtifacts: true)
             }
         }
     }
