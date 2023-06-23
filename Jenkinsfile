@@ -68,3 +68,4 @@ def runScanJob(String prefix) {
         sh "bash ${scriptFilePath}" // Execute the shell script
     }
 }
+}
