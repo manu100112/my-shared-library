@@ -66,6 +66,19 @@ def runScanJob(String prefix) {
         // Steps for Scan Job
         def scriptFilePath = "${env.WORKSPACE}/${prefix}.sh"
         sh "chmod +x ${scriptFilePath}" // Ensure the shell script is executable
-        sh "bash ${scriptFilePath}" // Execute the shell script
+
+        if (fileExists(scriptFilePath)) {
+            sh "bash ${scriptFilePath}" // Execute the shell script
+        } else {
+            error "Shell script file not found: ${scriptFilePath}"
+        }
     }
+}
+
+boolean fileExists(String filePath) {
+    return fileExists(new File(filePath))
+}
+
+boolean fileExists(File file) {
+    return file.exists() && file.isFile()
 }
