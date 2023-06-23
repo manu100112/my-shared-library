@@ -47,12 +47,14 @@ pipeline {
                 parallel(
                     "scan-demo": {
                         script {
-                            runScanJob("jt")
+                            sh 'chmod a+x scan-demo.sh'
+                            sh './scan-demo.sh'
                         }
                     },
                     "scan-ieu": {
                         script {
-                            runScanJob("ieu")
+                            sh 'chmod a+x scan-ieu.sh'
+                            sh './scan-ieu.sh'
                         }
                     }
                 )
@@ -61,24 +63,3 @@ pipeline {
     }
 }
 
-def runScanJob(String prefix) {
-    return {
-        // Steps for Scan Job
-        def scriptFilePath = "${env.WORKSPACE}/${prefix}.sh"
-        sh "chmod +x ${scriptFilePath}" // Ensure the shell script is executable
-
-        if (fileExists(scriptFilePath)) {
-            sh "bash ${scriptFilePath}" // Execute the shell script
-        } else {
-            error "Shell script file not found: ${scriptFilePath}"
-        }
-    }
-}
-
-boolean fileExists(String filePath) {
-    return fileExists(new File(filePath))
-}
-
-boolean fileExists(File file) {
-    return file.exists() && file.isFile()
-}
