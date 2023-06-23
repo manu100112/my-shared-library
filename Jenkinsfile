@@ -46,7 +46,7 @@ pipeline {
 
 
         
-        stage('Artifacts') {
+        /*stage('Artifacts') {
             steps {
                 parallel(
                     "scan-demo": {
@@ -75,7 +75,7 @@ pipeline {
                     }
                 )
             }
-        }
+        }*/
 
         stage('Shell Execution') {
             steps {
