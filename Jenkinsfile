@@ -29,6 +29,22 @@ pipeline {
             }
         }
 
+
+        stage('Clone Repository') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'main']], // Specify the branch you want to clone
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/manu100112/my-shared-library.git', // Specify the URL of the repository
+                        credentialsId: 'b1936281-4135-48cc-a606-92c35202591b' // Optional: If authentication is required
+                    ]]
+                ])
+            }
+        }
+
+
+        
         /*stage('Artifacts') {
             steps {
                 parallel(
