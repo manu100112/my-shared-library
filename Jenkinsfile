@@ -44,23 +44,27 @@ stages {
         }*/
 
         stage('Shell Execution') {
-            steps {
-                parallel(
-                    "scan-demo": {
-                        runScanJob("scan-demo1")
-                    },
-                    "scan-ieu": {
-                        runScanJob("scan-ieu1")
-                    }
-                )
+    steps {
+        parallel(
+            "scan-demo": {
+                script {
+                    runScanJob("jt")
+                }
+            },
+            "scan-ieu": {
+                script {
+                    runScanJob("ieu")
+                }
             }
-        }
+        )
     }
 }
+
 def runScanJob(String prefix) {
     return {
         // Steps for Scan Job
-        sh "chmod +x ${prefix}.sh" // Ensure the shell script is executable
-        sh "./${prefix}.sh" // Execute the shell script
+        def scriptFilePath = "${env.WORKSPACE}/${prefix}.sh"
+        sh "chmod +x ${scriptFilePath}" // Ensure the shell script is executable
+        sh "bash ${scriptFilePath}" // Execute the shell script
     }
 }
