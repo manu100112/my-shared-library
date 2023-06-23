@@ -18,16 +18,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        script {
-                            buildJob('scan-demo')
-                        }
+                        buildJob('scan-demo')
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        script {
-                            buildJob('scan-ieu')
-                        }
+                        buildJob('scan-ieu')
                     }
                 }
             }
@@ -37,16 +33,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        script {
-                            deleteWorkspace('scan-demo')
-                        }
+                        deleteWorkspace('scan-demo')
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        script {
-                            deleteWorkspace('scan-ieu')
-                        }
+                        deleteWorkspace('scan-ieu')
                     }
                 }
             }
@@ -56,16 +48,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        script {
-                            copyArtifacts('scan-demo', ['packageJT', 'commit'], ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
-                        }
+                        copyArtifacts('scan-demo', ['packageJT', 'commit'], ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        script {
-                            copyArtifacts('scan-ieu', ['LegacyBuildV2', 'commit'], ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
-                        }
+                        copyArtifacts('scan-ieu', ['LegacyBuildV2', 'commit'], ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
                     }
                 }
             }
@@ -75,16 +63,12 @@ pipeline {
             parallel {
                 stage('scan-demo') {
                     steps {
-                        script {
-                            executeShell('scan-demo', 'scan-demo.sh')
-                        }
+                        executeShell('scan-demo', 'scan-demo.sh')
                     }
                 }
                 stage('scan-ieu') {
                     steps {
-                        script {
-                            executeShell('scan-ieu', 'scan-ieu.sh')
-                        }
+                        executeShell('scan-ieu', 'scan-ieu.sh')
                     }
                 }
             }
@@ -93,69 +77,37 @@ pipeline {
 }
 
 def buildJob(jobName) {
-    pipeline {
-        agent any
-
-        stages {
-            stage('Build') {
-                steps {
-                    script {
-                        build job: jobName, propagate: true
-                    }
-                }
-            }
+    stage('Build') {
+        steps {
+            build job: jobName, propagate: true
         }
     }
 }
 
 def deleteWorkspace(jobName) {
-    pipeline {
-        agent any
-
-        stages {
-            stage('Delete Workspace') {
-                steps {
-                    script {
-                        deleteDir()
-                    }
-                }
-            }
+    stage('Delete Workspace') {
+        steps {
+            deleteDir()
         }
     }
 }
 
 def copyArtifacts(jobName, projectNames, artifactNames) {
-    pipeline {
-        agent any
-
-        stages {
-            stage('Copy Artifacts') {
-                steps {
-                    script {
-                        for (int i = 0; i < projectNames.size(); i++) {
-                            def projectName = projectNames[i]
-                            def artifactName = artifactNames[i]
-                            copyArtifacts(projectName: projectName, target: "release/${jobName}${artifactName}", fingerprintArtifacts: true)
-                        }
-                    }
-                }
+    stage('Copy Artifacts') {
+        steps {
+            for (int i = 0; i < projectNames.size(); i++) {
+                def projectName = projectNames[i]
+                def artifactName = artifactNames[i]
+                copyArtifacts(projectName: projectName, target: "release/${jobName}${artifactName}", fingerprintArtifacts: true)
             }
         }
     }
 }
 
 def executeShell(jobName, scriptName) {
-    pipeline {
-        agent any
-
-        stages {
-            stage('Shell Execution') {
-                steps {
-                    script {
-                        sh "./${scriptName}" // Execute the shell script
-                    }
-                }
-            }
+    stage('Shell Execution') {
+        steps {
+            sh "./${scriptName}" // Execute the shell script
         }
     }
 }
