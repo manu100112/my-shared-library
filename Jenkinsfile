@@ -38,47 +38,57 @@ pipeline {
 
         stage('Shell Execution') {
             steps {
-                script {
-                    def shellScripts = [
-                        "scan-demo": "scan-demo.sh",
-                        "scan-airaccess": "scan-accessair.sh",
-                        "scan-dns": "scan-dns.sh",
-                        "scan-sie": "scan-sie.sh",
-                        "scan-smeg": "scan-smeg.sh",
-                        "scan-tangibility": "scan-tangibility.sh",
-                        "scan-toast": "scan-toast.sh",
-                        "scan-ieu": "scan-ieu.sh"
-                    ]
-                    
-                    def failures = [:]
-                    
-                    shellScripts.each { scriptName, scriptFile ->
-                        failures[scriptName] = {
-                            stage(scriptName) {
-                                steps {
-                                    script {
-                                        sh "chmod a+x ${scriptFile}"
-                                        def scriptOutput = sh(
-                                            returnStdout: true,
-                                            returnStatus: true,
-                                            script: "./${scriptFile}"
-                                        )
-
-                                        // Print the script output
-                                        println(scriptOutput.out)
-
-                                        // Check the script exit status
-                                        if (scriptOutput.returnStatus != 0) {
-                                            error("Shell script execution failed: ${scriptFile}")
-                                        }
-                                    }
-                                }
-                            }
+                parallel(
+                    "scan-demo": {
+                        script {
+                            sh 'chmod a+x scan-demo.sh'
+                            sh './scan-demo.sh > scan-demo.log'
+                            sh 'echo scan-demo.log'
+                        }
+                    },
+                    "scan-airaccess": {
+                        script {
+                            sh 'chmod a+x scan-accessair.sh'
+                            sh './scan-accessair.sh'
+                        }
+                    },
+                    "scan-dns": {
+                        script {
+                            sh 'chmod a+x scan-dns.sh'
+                            sh './scan-dns.sh'
+                        }
+                    },
+                    "scan-sie": {
+                        script {
+                            sh 'chmod a+x scan-sie.sh'
+                            sh './scan-sie.sh'
+                        }
+                    },
+                    "scan-smeg": {
+                        script {
+                            sh 'chmod a+x scan-smeg.sh'
+                            sh './scan-smeg.sh'
+                        }
+                    },
+                    "scan-tangibility": {
+                        script {
+                            sh 'chmod a+x scan-tangibility.sh'
+                            sh './scan-tangibility.sh'
+                        }
+                    },
+                    "scan-toast": {
+                        script {
+                            sh 'chmod a+x scan-toast.sh'
+                            sh './scan-toast.sh'
+                        }
+                    },
+                    "scan-ieu": {
+                        script {
+                            sh 'chmod a+x scan-ieu.sh'
+                            sh './scan-ieu.sh'
                         }
                     }
-                    
-                    parallel(failures)
-                }
+                )
             }
         }
     }
