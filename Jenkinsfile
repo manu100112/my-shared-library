@@ -14,11 +14,11 @@ pipeline {
     }
 
 stages {
-     //  stage('Build Triggers') {
-     //       steps {
-      //          build(job: 'build', propagate: true, wait: true)
-       //     }
-     //   }
+        /*stage('Build Triggers') {
+            steps {
+                build(job: 'build', propagate: true, wait: true)
+            }
+        }*/
          
 
         stage('Build Environment') {
@@ -30,7 +30,7 @@ stages {
             }
         }
 
-        stage('Artifacts') {
+        /*stage('Artifacts') {
             steps {
                 parallel(
                     "scan-demo": {
@@ -41,7 +41,7 @@ stages {
                     }
                 )
             }
-        }
+        }*/
 
         stage('Shell Execution') {
             steps {
