@@ -57,12 +57,10 @@ stages {
         }
     }
 }
-
 def runScanJob(String prefix) {
     return {
         // Steps for Scan Job
         sh "chmod +x ${prefix}.sh" // Ensure the shell script is executable
         sh "./${prefix}.sh" // Execute the shell script
     }
-}
 }
