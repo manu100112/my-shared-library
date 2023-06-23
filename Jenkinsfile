@@ -29,11 +29,11 @@ pipeline {
             }
         }
 
-        stage('Build Triggers') {
+        /*stage('Build Triggers') {
             steps {
                 build(job: 'build', propagate: true, wait: true)
             }
-        }
+        }*/
 
         stage('Build Environment') {
             steps {
