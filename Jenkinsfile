@@ -47,10 +47,10 @@ stages {
             steps {
                 parallel(
                     "scan-demo": {
-                        runScanJob("scan-demo.sh")
+                        runScanJob("scan-demo1.sh")
                     },
                     "scan-ieu": {
-                        runScanJob("scan-ieu.sh")
+                        runScanJob("scan-ieu1.sh")
                     }
                 )
             }
