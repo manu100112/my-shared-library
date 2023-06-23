@@ -1,5 +1,9 @@
 pipeline {
-    agent ''
+    agent {
+        node {
+            label ''
+        }
+    }
 
     options {
         buildDiscarder(logRotator(daysToKeepStr: '7')) // Keep builds for 7 days
@@ -12,7 +16,7 @@ pipeline {
     stages {
         stage('Build Triggers') {
             steps {
-                upstream(upstreamProjects: 'build', threshold: hudson.model.Result.SUCCESS)
+                upstream(upstreamTrigger: upstream('build'))
             }
         }
 
