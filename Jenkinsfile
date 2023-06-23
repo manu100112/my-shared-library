@@ -1,12 +1,11 @@
 pipeline {
     agent {
-        node {
-            label ''
-        }
+        label 'my-agent'
     }
 
     options {
-        buildDiscarder(logRotator(daysToKeepStr: '7')) // Keep builds for 7 days
+        buildDiscarder(logRotator(daysToKeepStr: '7'))
+        timestamps()
     }
     
     environment {
@@ -16,18 +15,14 @@ pipeline {
     stages {
         stage('Build Triggers') {
             parallel {
-                stage('scan-demo') {
+                stage('Scan Demo') {
                     steps {
-                        script {
-                            buildJob('scan-demo')
-                        }
+                        build job: 'scan-demo', propagate: true
                     }
                 }
-                stage('scan-ieu') {
+                stage('Scan IEU') {
                     steps {
-                        script {
-                            buildJob('scan-ieu')
-                        }
+                        build job: 'scan-ieu', propagate: true
                     }
                 }
             }
@@ -35,18 +30,14 @@ pipeline {
         
         stage('Build Environment') {
             parallel {
-                stage('scan-demo') {
+                stage('Delete Workspace Demo') {
                     steps {
-                        script {
-                            deleteWorkspace('scan-demo')
-                        }
+                        deleteDir()
                     }
                 }
-                stage('scan-ieu') {
+                stage('Delete Workspace IEU') {
                     steps {
-                        script {
-                            deleteWorkspace('scan-ieu')
-                        }
+                        deleteDir()
                     }
                 }
             }
@@ -54,18 +45,14 @@ pipeline {
    
         stage('Artifacts') {
             parallel {
-                stage('scan-demo') {
+                stage('Copy Artifacts Demo') {
                     steps {
-                        script {
-                            copyArtifacts('scan-demo', ['packageJT', 'commit'], ['scan-demo-artifact.jar', 'scan-demo-commit.txt'])
-                        }
+                        copyArtifacts(projectName: 'scan-demo', target: 'release/scan-demo', fingerprintArtifacts: true)
                     }
                 }
-                stage('scan-ieu') {
+                stage('Copy Artifacts IEU') {
                     steps {
-                        script {
-                            copyArtifacts('scan-ieu', ['LegacyBuildV2', 'commit'], ['scan-ieu-artifact.jar', 'scan-ieu-commit.txt'])
-                        }
+                        copyArtifacts(projectName: 'scan-ieu', target: 'release/scan-ieu', fingerprintArtifacts: true)
                     }
                 }
             }
@@ -73,102 +60,14 @@ pipeline {
         
         stage('Shell Execution') {
             parallel {
-                stage('scan-demo') {
+                stage('Shell Execution Demo') {
                     steps {
-                        script {
-                            executeShell('scan-demo', 'scan-demo.sh')
-                        }
+                        sh './scan-demo.sh'
                     }
                 }
-                stage('scan-ieu') {
+                stage('Shell Execution IEU') {
                     steps {
-                        script {
-                            executeShell('scan-ieu', 'scan-ieu.sh')
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-def buildJob(jobName) {
-    pipeline {
-        agent {
-        node {
-            label ''
-        }
-    }
-
-        stages {
-            stage('Build') {
-                steps {
-                    script {
-                        build job: jobName, propagate: true
-                    }
-                }
-            }
-        }
-    }
-}
-
-def deleteWorkspace(jobName) {
-    pipeline {
-        agent {
-        node {
-            label ''
-        }
-    }
-
-        stages {
-            stage('Delete Workspace') {
-                steps {
-                    script {
-                        deleteDir()
-                    }
-                }
-            }
-        }
-    }
-}
-
-def copyArtifacts(jobName, projectNames, artifactNames) {
-    pipeline {
-        agent {
-        node {
-            label ''
-        }
-    }
-
-        stages {
-            stage('Copy Artifacts') {
-                steps {
-                    script {
-                        for (int i = 0; i < projectNames.size(); i++) {
-                            def projectName = projectNames[i]
-                            def artifactName = artifactNames[i]
-                            copyArtifacts(projectName: projectName, target: "release/${jobName}${artifactName}", fingerprintArtifacts: true)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-def executeShell(jobName, scriptName) {
-    pipeline {
-        agent {
-        node {
-            label ''
-        }
-    }
-
-        stages {
-            stage('Shell Execution') {
-                steps {
-                    script {
-                        sh "./${scriptName}" // Execute the shell script
+                        sh './scan-ieu.sh'
                     }
                 }
             }
