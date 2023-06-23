@@ -47,6 +47,8 @@ pipeline {
                 parallel(
                     "scan-demo": {
                         script {
+                            sh 'ls'
+                            sh 'pwd'
                             sh 'chmod a+x scan-demo.sh'
                             sh './scan-demo.sh'
                         }
