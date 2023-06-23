@@ -13,13 +13,12 @@ pipeline {
         _JAVA_OPTIONS = '-Djava.io.tmpdir="${WORKSPACE}/tmp"'
     }
 
-stages {
+    stages {
         /*stage('Build Triggers') {
             steps {
                 build(job: 'build', propagate: true, wait: true)
             }
         }*/
-         
 
         stage('Build Environment') {
             steps {
@@ -44,19 +43,21 @@ stages {
         }*/
 
         stage('Shell Execution') {
-    steps {
-        parallel(
-            "scan-demo": {
-                script {
-                    runScanJob("jt")
-                }
-            },
-            "scan-ieu": {
-                script {
-                    runScanJob("ieu")
-                }
+            steps {
+                parallel(
+                    "scan-demo": {
+                        script {
+                            runScanJob("jt")
+                        }
+                    },
+                    "scan-ieu": {
+                        script {
+                            runScanJob("ieu")
+                        }
+                    }
+                )
             }
-        )
+        }
     }
 }
 
@@ -67,5 +68,4 @@ def runScanJob(String prefix) {
         sh "chmod +x ${scriptFilePath}" // Ensure the shell script is executable
         sh "bash ${scriptFilePath}" // Execute the shell script
     }
-}
 }
