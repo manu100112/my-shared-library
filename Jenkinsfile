@@ -16,10 +16,7 @@ pipeline {
      stages {
         stage('Build Triggers') {
             steps {
-                upstream(upstreamFilterStrategy: hudson.plugins.parameterizedtrigger.TriggerBuilder) {
-                    upstreamProjects('build')
-                    threshold(hudson.model.Result.SUCCESS)
-                }
+                upstream 'build'
             }
         }
 
