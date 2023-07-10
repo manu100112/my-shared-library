@@ -82,8 +82,8 @@ pipeline {
                     "scan-demo": {
                         script {
                             sh 'chmod a+x scan-demo.sh'
-                            sh './scan-demo.sh > scan-demo.log'
-                            sh 'echo scan-demo.log'
+                            sh './scan-demo.sh'
+                    
                         }
                     },
                     "scan-airaccess": {
